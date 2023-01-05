@@ -6,7 +6,6 @@ public class Graph {
      * the example shows how graphs should be represented:
      * - each node in the graph is a key in a dictionary
      * - each edge of a node is represented as a entry in a list of nodes, where the edge connects
-     *
      *  A > C
      *  v   v
      *  B   E
@@ -25,16 +24,18 @@ public class Graph {
     /**
      * implements DFS on a simple graph. each node is just a String as it's id. Prints the current Node.
      * @param graph Map representation of a graph.
-     * @param current id of current node
+     * @param start id of start node
      */
-    public static void depthFirstPrint(Map<String, List<String>> graph, String current) {
-        Deque<String> stack = new ArrayDeque<>();
-        stack.addLast(current);
+    public static <T> void depthFirstPrint(Map<T, List<T>> graph, T start) {
+        Deque<T> stack = new ArrayDeque<>();
+        Set<T> visited = new HashSet<>();
+        stack.addLast(start);
         while (!stack.isEmpty()) {
-            current = stack.removeLast();
+            T current = stack.removeLast();
+            visited.add(current);
             System.out.printf("%s ", current); //do something /w the element after popping from queue
-            for (String neighbor : graph.get(current)) {
-                stack.addLast(neighbor);
+            for (T neighbor : graph.get(current)) {
+                if (!visited.contains(neighbor)) stack.addLast(neighbor);
             }
         }
     }
@@ -42,12 +43,13 @@ public class Graph {
     /**
      * uses the system stack for DFS. Prints the current Node.
      * @param graph Map representation of graph
-     * @param current id of current Node
+     * @param node id of current Node
      */
-    public static void recursiveDepthFirstPrint(Map<String, List<String>> graph, String current) {
-        System.out.printf("%s ", current); // do something
-        for (String neighbor : graph.get(current)) {
-            recursiveDepthFirstPrint(graph, neighbor);
+    public static <T> void recursiveDepthFirstPrint(Map<T, List<T>> graph, T node, Set<T> visited) {
+        visited.add(node);
+        System.out.printf("%s ", node); // do something
+        for (T neighbor : graph.get(node)) {
+            if (!visited.contains(neighbor)) recursiveDepthFirstPrint(graph, neighbor, visited);
         }
     }
 
@@ -55,21 +57,18 @@ public class Graph {
     /**
      * implements BFS on a simple graph. each node is just a String as it's id. Prints the current Node.
      * @param graph Map representation of a graph.
-     * @param current id of current node
+     * @param start id of start node
      */
-    public static <E> void breadthFirstPrint(Map<E, List<E>> graph, E current) {
-        Deque<E> queue = new ArrayDeque<>();
-        queue.addLast(current);
-        current = queue.removeFirst();
-        System.out.printf("%s ", current); //do something /w the element after popping from queue
-        for (E neighbor : graph.get(current)) {
-            queue.addLast(neighbor);
-        }
+    public static <T> void breadthFirstPrint(Map<T, List<T>> graph, T start) {
+        Deque<T> queue = new ArrayDeque<>();
+        Set<T> visited = new HashSet<>();
+        queue.addLast(start);
         while (!queue.isEmpty()) {
-            current = queue.removeFirst();
-            System.out.printf("%s ", current); //do something /w the element after popping from queue
-            for (E neighbor : graph.get(current)) {
-                queue.addLast(neighbor);
+            T node = queue.removeFirst();
+            visited.add(node);
+            System.out.printf("%s ", node); //do something /w the element after popping from queue
+            for (T neighbor : graph.get(node)) {
+                if (!visited.contains(neighbor)) queue.addLast(neighbor);
             }
         }
     }
