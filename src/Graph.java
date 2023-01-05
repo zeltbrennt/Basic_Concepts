@@ -73,3 +73,21 @@ public class Graph {
         }
     }
 }
+
+class GraphExercises {
+
+    static <T> boolean hasPath(Map<T, List<T>> graph , T start, T target) {
+        Deque<T> queue = new ArrayDeque<>();
+        Set<T> visited = new HashSet<>();
+        queue.addLast(start);
+        while (!queue.isEmpty()) {
+            T node = queue.removeFirst();
+            visited.add(node);
+            for (T edge : graph.get(node)) {
+                if (edge == target ) return true;
+                if (!visited.contains(edge)) queue.addLast(edge);
+            }
+        }
+        return false;
+    }
+}
