@@ -116,7 +116,8 @@ public class Graph {
 
 class GraphExercises {
 
-    static <T> boolean hasPath(Map<T, List<T>> graph , T start, T target) {
+    /* finds any path using BFS */
+    static <T> boolean hasPath(Map<T, List<T>> graph, T start, T target) {
         Deque<T> queue = new ArrayDeque<>();
         Set<T> visited = new HashSet<>();
         queue.addLast(start);
@@ -124,10 +125,31 @@ class GraphExercises {
             T node = queue.removeFirst();
             visited.add(node);
             for (T edge : graph.get(node)) {
-                if (edge == target ) return true;
+                if (edge == target) return true;
                 if (!visited.contains(edge)) queue.addLast(edge);
             }
         }
         return false;
+    }
+
+    /* finds the number of cennected components of a graph using recursive DFS */
+    static <T> int connectedComponentsCount(Map<T, List<T>> graph) {
+        Set<T> visited = new HashSet<>();
+        int count = 0;
+        for (T node : graph.keySet()) {
+            if (explore(graph, node, visited)) count++;
+        }
+        return count;
+    }
+
+    /* true if the graph / component is fully explored
+     */
+    static <T> boolean explore(Map<T, List<T>> graph, T current, Set<T> visited) {
+        if (visited.contains(current)) return false;
+        visited.add(current);
+        for (T neighbor : graph.get(current)) {
+            explore(graph, neighbor, visited);
+        }
+        return true;
     }
 }
