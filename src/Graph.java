@@ -6,13 +6,13 @@ public class Graph {
      * the example shows how graphs should be represented:
      * - each node in the graph is a key in a dictionary
      * - each edge of a node is represented as a entry in a list of nodes, where the edge connects
-     *  A > C
-     *  v   v
-     *  B   E
-     *  v
-     *  D > F
+     * A > C
+     * v   v
+     * B   E
+     * v
+     * D > F
      */
-    public static final Map<String, List<String>> EXAMPLE = Map.of(
+    public static final Map<String, List<String>> EXAMPLE_MAP = Map.of(
             "a", List.of("c", "b"),
             "b", List.of("d"),
             "c", List.of("e"),
@@ -22,7 +22,25 @@ public class Graph {
     );
 
     /**
+     * Example shows how a edge list can represent a undirected graph.
+     * Can be transformed into an Adjecency Map
+     * I - J
+     * |
+     * K - L
+     * |
+     * M   N - O
+     */
+    public static final List<List<String>> EXAMPLE_EDGES = List.of(
+            List.of("i", "j"),
+            List.of("k", "i"),
+            List.of("m", "k"),
+            List.of("k", "l"),
+            List.of("o", "n")
+    );
+
+    /**
      * implements DFS on a simple graph. each node is just a String as it's id. Prints the current Node.
+     *
      * @param graph Map representation of a graph.
      * @param start id of start node
      */
@@ -42,8 +60,9 @@ public class Graph {
 
     /**
      * uses the system stack for DFS. Prints the current Node.
+     *
      * @param graph Map representation of graph
-     * @param node id of current Node
+     * @param node  id of current Node
      */
     public static <T> void recursiveDepthFirstPrint(Map<T, List<T>> graph, T node, Set<T> visited) {
         visited.add(node);
@@ -56,6 +75,7 @@ public class Graph {
 
     /**
      * implements BFS on a simple graph. each node is just a String as it's id. Prints the current Node.
+     *
      * @param graph Map representation of a graph.
      * @param start id of start node
      */
@@ -71,6 +91,26 @@ public class Graph {
                 if (!visited.contains(neighbor)) queue.addLast(neighbor);
             }
         }
+    }
+
+    /**
+     * transforms a list of edges into an adjecency map representation for algorithmic use
+     *
+     * @param edges 2D ArrayList of exactly 2 connected Nodes. Nodes without edges should be represented as an edge to itself
+     * @param <T>   any
+     * @return a Adjecency Map as A Dictonary
+     */
+    public static <T> Map<T, List<T>> createAdjecencyMap(List<List<T>> edges) {
+        Map<T, List<T>> adjecencyMap = new HashMap<>();
+        for (List<T> edge : edges) {
+            T nodeA = edge.get(0);
+            T nodeB = edge.get(1);
+            if (adjecencyMap.containsKey(nodeA)) adjecencyMap.get(nodeA).add(nodeB);
+            else adjecencyMap.put(nodeA, new ArrayList<>(Collections.singletonList(nodeB)));
+            if (adjecencyMap.containsKey(nodeB)) adjecencyMap.get(nodeB).add(nodeA);
+            else adjecencyMap.put(nodeB, new ArrayList<>(Collections.singletonList(nodeA)));
+        }
+        return adjecencyMap;
     }
 }
 
