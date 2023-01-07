@@ -132,7 +132,7 @@ class GraphExercises {
         return false;
     }
 
-    /* finds the number of cennected components of a graph using recursive DFS */
+    /* finds the number of connected components of a graph using recursive DFS */
     static <T> int connectedComponentsCount(Map<T, List<T>> graph) {
         Set<T> visited = new HashSet<>();
         int count = 0;
@@ -142,8 +142,7 @@ class GraphExercises {
         return count;
     }
 
-    /* true if the graph / component is fully explored
-     */
+    /* true if the graph / component is fully explored */
     static <T> boolean explore(Map<T, List<T>> graph, T current, Set<T> visited) {
         if (visited.contains(current)) return false;
         visited.add(current);
@@ -151,5 +150,24 @@ class GraphExercises {
             explore(graph, neighbor, visited);
         }
         return true;
+    }
+
+    static <T> int largestComponent(Map<T, List<T>> graph) {
+        Set<T> visited = new HashSet<>();
+        int largest = 0;
+        for (T node : graph.keySet()) {
+            largest = Math.max(exploreSize(graph, node, visited), largest);
+        }
+        return largest;
+    }
+
+    static <T> int exploreSize(Map<T, List<T>> graph, T node, Set<T> visited) {
+        if (visited.contains(node)) return 0;
+        visited.add(node);
+        int size = 1;
+        for (T neighbor : graph.get(node)) {
+            size += exploreSize(graph, neighbor, visited);
+        }
+        return size;
     }
 }
