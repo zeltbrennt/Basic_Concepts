@@ -170,4 +170,30 @@ class GraphExercises {
         }
         return size;
     }
+
+    static <T> List<T> shortestPath(Map<T, List<T>> graph, T start, T target) {
+        Map<T, T> connections = new HashMap<>();
+        Deque<T> queue = new ArrayDeque<>();
+        Set<T> visited = new HashSet<>();
+        queue.addLast(start);
+        connections.put(start, start);
+        while (!queue.isEmpty()) {
+            T node = queue.removeFirst();
+            if (node == target) break;
+            visited.add(node);
+            for (T neighbor : graph.get(node)) {
+                if (!visited.contains(neighbor)) {
+                    queue.addLast(neighbor);
+                    connections.putIfAbsent(neighbor, node);
+                }
+            }
+        }
+        List<T> path = new ArrayList<>(Collections.singletonList(target));
+        while (start != target) {
+            path.add(connections.get(target));
+            target = connections.get(target);
+        }
+        Collections.reverse(path);
+        return path;
+    }
 }
