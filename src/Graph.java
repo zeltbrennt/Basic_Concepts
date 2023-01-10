@@ -179,15 +179,19 @@ class GraphExercises {
         connections.put(start, start);
         while (!queue.isEmpty()) {
             T node = queue.removeFirst();
-            if (node == target) break;
-            visited.add(node);
+            if (node == target) return showPath(connections, start, target);
             for (T neighbor : graph.get(node)) {
                 if (!visited.contains(neighbor)) {
+                    visited.add(node);
                     queue.addLast(neighbor);
                     connections.putIfAbsent(neighbor, node);
                 }
             }
         }
+        return Collections.emptyList();
+    }
+
+    private static <T> List<T> showPath(Map<T, T> connections, T start, T target) {
         List<T> path = new ArrayList<>(Collections.singletonList(target));
         while (start != target) {
             path.add(connections.get(target));
